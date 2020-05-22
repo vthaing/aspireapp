@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register New Loan Application{% endblock %}
+
+{% block body %}
+    <h1>Register New Loan Application</h1>
+
+    {{ include('loan/_form.html.twig') }}
+
+    <a href="{{ path('loan_index') }}">Back to list</a>
+{% endblock %}
