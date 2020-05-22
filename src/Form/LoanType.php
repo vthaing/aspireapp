@@ -4,8 +4,11 @@ namespace App\Form;
 
 use App\Entity\Loan;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class LoanType extends AbstractType
 {
@@ -19,16 +22,21 @@ class LoanType extends AbstractType
             ->add('address')
             ->add('city')
             ->add('province')
-            ->add('monthlyNetIncome')
-            ->add('loanAmount')
-            ->add('loanTerm')
+            ->add('monthlyNetIncome', NumberType::class, ['label' => 'Monthly Net Income (USD)'])
+            ->add('loanAmount', NumberType::class, ['label' => 'Loan Amount (USD)'])
+            ->add('loanTerm', NumberType::class, ['label' => 'Loan Term (months)'])
+
         ;
+        if ($options['show_status_field']) {
+            $builder->add('status', ChoiceType::class, ['choices' => Loan::getStatuses()]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Loan::class,
+            'show_status_field' => false
         ]);
     }
 }

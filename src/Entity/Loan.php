@@ -4,12 +4,22 @@ namespace App\Entity;
 
 use App\Repository\LoanRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
+use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableMethodsTrait;
+use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 
 /**
  * @ORM\Entity(repositoryClass=LoanRepository::class)
  */
-class Loan
+class Loan implements TimestampableInterface
 {
+    use TimestampableTrait;
+
+    const LOAN_STATUS_NEW = 1;
+    const LOAN_STATUS_APPROVED = 2;
+    const LOAN_STATUS_CANCELLED_BY_CUSTOMER = 3;
+    const LOAN_STATUS_REJECTED = 4;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -72,6 +82,11 @@ class Loan
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="smallint")
+     */
+    private $status;
 
     public function getId(): ?int
     {
@@ -208,5 +223,36 @@ class Loan
         $this->user = $user;
 
         return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getStatusLabel()
+    {
+        foreach (self::getStatuses() as $label => $key) {
+            if ($key === $this->getStatus()) {
+                return $label;
+            }
+        }
+    }
+
+    public static function getStatuses()
+    {
+        return [
+            'New' => self::LOAN_STATUS_NEW,
+            'Approved' => self::LOAN_STATUS_APPROVED,
+            'Cancelled' => self::LOAN_STATUS_CANCELLED_BY_CUSTOMER,
+            'Rejected' => self::LOAN_STATUS_REJECTED
+        ];
     }
 }

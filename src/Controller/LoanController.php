@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 
 class LoanController extends AbstractController
@@ -27,13 +28,18 @@ class LoanController extends AbstractController
     /**
      * @Route("/loan/new", name="loan_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, Security $security): Response
     {
         $loan = new Loan();
         $form = $this->createForm(LoanType::class, $loan);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            //Set logged in user as owner of loan
+            $loan->setUser($security->getUser());
+            //New record should have status new
+            $loan->setStatus(Loan::LOAN_STATUS_NEW);
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($loan);
             $entityManager->flush();
@@ -62,7 +68,7 @@ class LoanController extends AbstractController
      */
     public function edit(Request $request, Loan $loan): Response
     {
-        $form = $this->createForm(LoanType::class, $loan);
+        $form = $this->createForm(LoanType::class, $loan, ['show_status_field' => true]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
