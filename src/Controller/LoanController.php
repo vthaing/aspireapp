@@ -10,13 +10,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/loan")
- */
+
 class LoanController extends AbstractController
 {
     /**
-     * @Route("/", name="loan_index", methods={"GET"})
+     * @Route("/", name="home_page", methods={"GET"})
+     * @Route("/loan/", name="loan_index", methods={"GET"})
      */
     public function index(LoanRepository $loanRepository): Response
     {
@@ -26,7 +25,7 @@ class LoanController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="loan_new", methods={"GET","POST"})
+     * @Route("/loan/new", name="loan_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -49,7 +48,7 @@ class LoanController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="loan_show", methods={"GET"})
+     * @Route("/loan/{id}", name="loan_show", methods={"GET"})
      */
     public function show(Loan $loan): Response
     {
@@ -59,7 +58,7 @@ class LoanController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="loan_edit", methods={"GET","POST"})
+     * @Route("/loan/{id}/edit", name="loan_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Loan $loan): Response
     {
@@ -79,7 +78,7 @@ class LoanController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="loan_delete", methods={"DELETE"})
+     * @Route("/loan/{id}", name="loan_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Loan $loan): Response
     {
