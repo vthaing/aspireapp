@@ -41,9 +41,15 @@ class User implements UserInterface
      */
     private $loans;
 
+    /**
+     * @ORM\OneToMany(targetEntity=LoanRepayment::class, mappedBy="user")
+     */
+    private $loanRepayments;
+
     public function __construct()
     {
         $this->loans = new ArrayCollection();
+        $this->loanRepayments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -149,6 +155,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($loan->getUser() === $this) {
                 $loan->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LoanRepayment[]
+     */
+    public function getLoanRepayments(): Collection
+    {
+        return $this->loanRepayments;
+    }
+
+    public function addLoanRepayment(LoanRepayment $loanRepayment): self
+    {
+        if (!$this->loanRepayments->contains($loanRepayment)) {
+            $this->loanRepayments[] = $loanRepayment;
+            $loanRepayment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLoanRepayment(LoanRepayment $loanRepayment): self
+    {
+        if ($this->loanRepayments->contains($loanRepayment)) {
+            $this->loanRepayments->removeElement($loanRepayment);
+            // set the owning side to null (unless already changed)
+            if ($loanRepayment->getUser() === $this) {
+                $loanRepayment->setUser(null);
             }
         }
 

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\LoanRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableMethodsTrait;
@@ -87,6 +89,31 @@ class Loan implements TimestampableInterface
      * @ORM\Column(type="smallint")
      */
     private $status;
+
+    /**
+     * @ORM\OneToMany(targetEntity=LoanRepayment::class, mappedBy="loan")
+     */
+    private $loanRepayments;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $interestRate;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $firstRepaymentPate;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $nextRepaymentDate;
+
+    public function __construct()
+    {
+        $this->loanRepayments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -254,5 +281,72 @@ class Loan implements TimestampableInterface
             'Cancelled' => self::LOAN_STATUS_CANCELLED_BY_CUSTOMER,
             'Rejected' => self::LOAN_STATUS_REJECTED
         ];
+    }
+
+    /**
+     * @return Collection|LoanRepayment[]
+     */
+    public function getLoanRepayments(): Collection
+    {
+        return $this->loanRepayments;
+    }
+
+    public function addLoanRepayment(LoanRepayment $loanRepayment): self
+    {
+        if (!$this->loanRepayments->contains($loanRepayment)) {
+            $this->loanRepayments[] = $loanRepayment;
+            $loanRepayment->setLoan($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLoanRepayment(LoanRepayment $loanRepayment): self
+    {
+        if ($this->loanRepayments->contains($loanRepayment)) {
+            $this->loanRepayments->removeElement($loanRepayment);
+            // set the owning side to null (unless already changed)
+            if ($loanRepayment->getLoan() === $this) {
+                $loanRepayment->setLoan(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getInterestRate(): ?float
+    {
+        return $this->interestRate;
+    }
+
+    public function setInterestRate(?float $interestRate): self
+    {
+        $this->interestRate = $interestRate;
+
+        return $this;
+    }
+
+    public function getFirstRepaymentPate(): ?\DateTimeInterface
+    {
+        return $this->firstRepaymentPate;
+    }
+
+    public function setFirstRepaymentPate(?\DateTimeInterface $firstRepaymentPate): self
+    {
+        $this->firstRepaymentPate = $firstRepaymentPate;
+
+        return $this;
+    }
+
+    public function getNextRepaymentDate(): ?\DateTimeInterface
+    {
+        return $this->nextRepaymentDate;
+    }
+
+    public function setNextRepaymentDate(\DateTimeInterface $nextRepaymentDate): self
+    {
+        $this->nextRepaymentDate = $nextRepaymentDate;
+
+        return $this;
     }
 }
