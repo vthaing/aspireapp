@@ -12,6 +12,10 @@ use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
  */
 class LoanRepayment implements TimestampableInterface
 {
+    const STATUS_NEW = 1;
+    const STATUS_FAILED = 2;
+    const STATUS_SUCCESS = 3;
+
     use TimestampableTrait;
     /**
      * @ORM\Id()

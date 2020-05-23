@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}LoanRepayment index{% endblock %}
+
+{% block body %}
+    <h1>Loan Repayment History</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>PayForRepaymentDate</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for loan_repayment in loan_repayments %}
+            <tr>
+                <td>{{ loan_repayment.id }}</td>
+                <td>{{ loan_repayment.amount }}</td>
+                <td>{{ loan_repayment.status }}</td>
+                <td>{{ loan_repayment.payForRepaymentDate ? loan_repayment.payForRepaymentDate|date('Y-m-d') : '' }}</td>
+                <td>{{ loan_repayment.createdAt ? loan_repayment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ loan_repayment.updatedAt ? loan_repayment.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    {#<a href="{{ path('loan_repayment_show', {'id': loan_repayment.id}) }}">show</a>#}
+                    {#<a href="{{ path('loan_repayment_edit', {'id': loan_repayment.id}) }}">edit</a>#}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

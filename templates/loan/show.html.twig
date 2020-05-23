@@ -5,6 +5,10 @@
 {% block body %}
     <h1>Loan Detail</h1>
 
+    <div class="btn-block pull-right">
+        {{ include('loan/_repay_form.html.twig') }}
+    </div>
+
     <table class="table">
         <tbody>
             <tr>
@@ -53,7 +57,7 @@
             </tr>
             <tr>
                 <th>Interest rate</th>
-                <td>{{ loan.interestRate}}</td>
+                <td>{{ loan.interestRate}}%</td>
             </tr>
             <tr>
                 <th>Status</th>
@@ -62,19 +66,14 @@
             {% if (loan.isApproved) %}
                 <tr>
                     <th>First repayment date</th>
-                    <td>{{ loan.firstRepaymentDate}}</td>
+                    <td>{{ loan.firstRepaymentDate ? loan.firstRepaymentDate|date('Y-m-d') : ''}}</td>
                 </tr>
                 <tr>
                     <th>Next repayment date</th>
-                    <td>{{ loan.nextRepaymentDate}}</td>
+                    <td>{{ loan.nextRepaymentDate ? loan.nextRepaymentDate|date('Y-m-d') : ''}}</td>
                 </tr>
             {% endif%}
         </tbody>
     </table>
-
     <a href="{{ path('loan_index') }}">Back to list</a>
-
-    <a href="{{ path('loan_edit', {'id': loan.id}) }}">edit</a>
-
-    {{ include('loan/_delete_form.html.twig') }}
 {% endblock %}

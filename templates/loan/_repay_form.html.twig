@@ -1,0 +1,6 @@
+<form method="post" action="{{ path('loan_repayment_new', {'id': loan.id}) }}" onsubmit="return confirm('Are you sure you want to repay?');">
+    <input type="hidden" name="_method" value="POST">
+    <input type="hidden" name="_token" value="{{ csrf_token('post' ~ loan.id) }}">
+    <input type="hidden" name="loanId" value="{{ loan.id }}">
+    <button class="btn btn-primary">{{ button_label|default('Repay') }}</button>
+</form>
