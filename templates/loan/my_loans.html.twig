@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Loans{% endblock %}
+
+{% block body %}
+    <h1>Loan index</h1>
+    <a href="{{ path('loan_new') }}">Register new loan application</a>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Loan Amount</th>
+            <th>Loan Term</th>
+            <th>Status</th>
+            <th>Next repayment</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for loan in loans %}
+            <tr>
+                <td>{{ loan.name }}</td>
+                <td>{{ loan.email }}</td>
+                <td style="text-align: right">{{ loan.loanAmount | number_format(2) }}</td>
+                <td>{{ loan.loanTerm }} (months)</td>
+                <td style="font-weight: bold">{{ loan.statusLabel }}</td>
+                <td>{{ loan.nextRepaymentDate ? loan.nextRepaymentDate|date('Y-m-d') }}</td>
+                <td>
+                    <a href="{{ path('loan_show', {'id': loan.id}) }}">Show</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

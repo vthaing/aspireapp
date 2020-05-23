@@ -34,7 +34,7 @@ class LoanController extends AbstractController
     public function myLoans(LoanRepository $loanRepository): Response
     {
         $currentUser = $this->getUser();
-        return $this->render('loan/index.html.twig', [
+        return $this->render('loan/my_loans.html.twig', [
             'loans' => $loanRepository->findBy(['user' => $currentUser]),
         ]);
     }
