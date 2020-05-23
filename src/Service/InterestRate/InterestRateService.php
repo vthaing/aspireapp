@@ -15,7 +15,7 @@ class InterestRateService
 {
     public function calculateInterestRate(Loan $loan) : float
     {
-        return $loan->getLoanAmount() * ($loan->getLoanTerm() * $loan->getInterestRate());
+        return ($loan->getLoanAmount() * ($loan->getLoanTerm() * $loan->getInterestRate()))/100;
     }
 
     public function calculaetTotalLoanRepayment(Loan $loan) : float

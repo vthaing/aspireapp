@@ -3,12 +3,13 @@
 {% block title %}Loan Detail{% endblock %}
 
 {% block body %}
-    {% if (loan.isApproved) %}
-    <h1>Summary</h1>
 
+    <h1>Summary</h1>
+    {% if (loan.isApproved) %}
         <div class="btn-block pull-right">
             {{ include('loan/_repay_form.html.twig') }}
         </div>
+    {% endif %}
 
     <table style="width: 400px; border: #222222" class="table">
         <tbody>
@@ -38,7 +39,7 @@
             </tr>
         </tbody>
     </table>
-    {% endif %}
+
     <h1>Loan Repayment History</h1>
     <table class="table">
         <thead>
