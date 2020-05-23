@@ -12,7 +12,62 @@ Make sure to do the following steps to set up the app.
 
 * Run: `php -S 127.0.0.1:8000 -t public`  to start the web server. You can access web server with URL: `http://localhost:8000`.  
 ** If you got any problem with port 8000. Please choose another free port on your PC.  
-# System explaination
+# Configuration
+I tried to make the system can be configurable as much as possible.
+## Payment frequency
+We might have many types of `repayment frequency`. They might be: monthly, fortnightly, yearly...  
+Currently, system is supporting for `Weekly repayment` frequency. You can integrate other type by changing the value of `$loan->repaymentFrequency`.  
+We are using `App\Service\Repayment\RepaymentService` to handle all business of repayment.  
+This service will detect which type of `repayment frequency` is using and then using the corresponding Strategy to process  
+To add `Monthly repayment` into system:   
+* Set value of $loan: `$loan->setRepaymentFrequency(Loan::REPAYMENT_MONTHLY)`.
+* Create class `MonthlyRepayment` to handle monthly behavior and override all abstract methods
+```
+
+namespace App\Service\Repayment;
+
+
+use App\Entity\Loan;
+
+class MonthlyRepayment extends RepaymentStrategy
+{
+    public function calculateAmount(Loan $loan): float
+    {
+        // TODO: Implement calculateAmount() method.
+    }
+
+    public function getNextRepaymentDate(Loan $loan): \DateTime
+    {
+        // TODO: Implement getNextRepaymentDate() method.
+    }
+
+}
+```
+* Register `MonthlyRepayment` as a service in `config/services.yaml`.  
+```
+services:
+    ...
+    app.service.repayment.mothly:
+        class: App\Service\Repayment\MonthRepayment
+    ...
+```
+* Integrate `MonthlyRepayment` into `RepaymentService` in  `config/services.yaml`.  
+```
+services:
+    ...
+    app.service.repayment.mothly:
+        class: App\Service\Repayment\MonthRepayment
+    ...
+    
+    App\Service\Repayment\RepaymentService:
+        arguments:
+            $repaymentStrategies:
+                # loan.paymentFrequency: RepaymentStrategyServiceAlias
+                1: '@app.service.repayment.weekly'
+                3: '@app.service.repayment.mothly'
+```
+
+# System explanation
 We have 2 types of user. They are normal and admin users.
 ## Normal user
 * User can log in to the app with this credential: `demo@aspireapp.com / pwd123`.    
