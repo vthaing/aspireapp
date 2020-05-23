@@ -6,7 +6,7 @@
  * Time: 10:49 AM
  */
 
-namespace App\Service;
+namespace App\Service\RepaymentAmountCalculator;
 
 
 use App\Entity\Loan;

@@ -10,7 +10,7 @@ namespace App\Factory;
 
 
 use App\Entity\Loan;
-use App\Service\RepaymentScheduler;
+use App\Service\RepaymentScheduler\RepaymentScheduler;
 use Symfony\Component\Security\Core\Security;
 
 class LoanFactory

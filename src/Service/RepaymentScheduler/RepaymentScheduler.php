@@ -6,7 +6,7 @@
  * Time: 10:52 AM
  */
 
-namespace App\Service;
+namespace App\Service\RepaymentScheduler;
 
 
 class RepaymentScheduler

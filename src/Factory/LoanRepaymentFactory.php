@@ -11,7 +11,7 @@ namespace App\Factory;
 
 use App\Entity\Loan;
 use App\Entity\LoanRepayment;
-use App\Service\RepaymentAmountCalculator;
+use App\Service\RepaymentAmountCalculator\RepaymentAmountCalculator;
 
 
 class LoanRepaymentFactory
