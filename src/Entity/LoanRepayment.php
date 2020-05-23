@@ -106,12 +106,12 @@ class LoanRepayment implements TimestampableInterface
         return $this;
     }
 
-    public function getPayForRepaymentDate(): ?\DateTimeInterface
+    public function getPayForRepaymentDate(): ?\DateTime
     {
         return $this->payForRepaymentDate;
     }
 
-    public function setPayForRepaymentDate(\DateTimeInterface $payForRepaymentDate): self
+    public function setPayForRepaymentDate(\DateTime $payForRepaymentDate): self
     {
         $this->payForRepaymentDate = $payForRepaymentDate;
 

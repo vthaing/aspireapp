@@ -10,7 +10,7 @@ namespace App\Factory;
 
 
 use App\Entity\Loan;
-use App\Service\RepaymentScheduler\RepaymentScheduler;
+use App\Service\Repayment\RepaymentService;
 use Symfony\Component\Security\Core\Security;
 
 class LoanFactory
@@ -20,14 +20,14 @@ class LoanFactory
      */
     private $security;
     /**
-     * @var RepaymentScheduler
+     * @var RepaymentService
      */
-    private $repaymentScheduler;
+    private $repaymentService;
 
-    public function __construct(Security $security, RepaymentScheduler $repaymentScheduler)
+    public function __construct(Security $security, RepaymentService $repaymentService)
     {
         $this->security = $security;
-        $this->repaymentScheduler = $repaymentScheduler;
+        $this->repaymentService = $repaymentService;
     }
 
     /**
@@ -74,7 +74,7 @@ class LoanFactory
      */
     public function changeNextRepaymentDate(Loan $loan)
     {
-        $nextRepaymentDate = $this->repaymentScheduler->getNextRepaymentDate($loan);
+        $nextRepaymentDate = $this->repaymentService->getNextRepaymentDate($loan);
         $loan->setNextRepaymentDate($nextRepaymentDate);
 
         return $loan;

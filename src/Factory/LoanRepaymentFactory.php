@@ -11,20 +11,20 @@ namespace App\Factory;
 
 use App\Entity\Loan;
 use App\Entity\LoanRepayment;
-use App\Service\RepaymentAmountCalculator\RepaymentAmountCalculator;
+use App\Service\Repayment\RepaymentService;
 
 
 class LoanRepaymentFactory
 {
     /**
-     * @var RepaymentAmountCalculator
+     * @var RepaymentService
      */
-    private $repaymentAmountCalculator;
+    private $repaymentService;
 
 
-    public function __construct(RepaymentAmountCalculator $repaymentAmountCalculator)
+    public function __construct(RepaymentService $repaymentService)
     {
-        $this->repaymentAmountCalculator = $repaymentAmountCalculator;
+        $this->repaymentService = $repaymentService;
     }
 
     /**
@@ -39,7 +39,7 @@ class LoanRepaymentFactory
         $repayment->setStatus(LoanRepayment::STATUS_NEW);
         $repayment->setPayForRepaymentDate($loan->getNextRepaymentDate());
 
-        $amount = $this->repaymentAmountCalculator->calculate($loan);
+        $amount = $this->repaymentService->calculateAmount($loan);
         $repayment->setAmount($amount);
 
 

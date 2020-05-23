@@ -25,3 +25,13 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    app.service.repayment.weekly:
+        class: App\Service\Repayment\WeeklyRepayment
+    App\Service\Repayment\RepaymentService:
+        arguments:
+            $repaymentStrategies:
+                # loan.paymentFrequency: RepaymentStrategyServiceAlias
+                1: '@app.service.repayment.weekly'
+
+

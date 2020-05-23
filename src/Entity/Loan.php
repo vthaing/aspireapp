@@ -171,12 +171,12 @@ class Loan implements TimestampableInterface
         return $this;
     }
 
-    public function getBirthDate(): ?\DateTimeInterface
+    public function getBirthDate(): ?\DateTime
     {
         return $this->birthDate;
     }
 
-    public function setBirthDate(\DateTimeInterface $birthDate): self
+    public function setBirthDate(\DateTime $birthDate): self
     {
         $this->birthDate = $birthDate;
 
@@ -370,24 +370,24 @@ class Loan implements TimestampableInterface
         return $this;
     }
 
-    public function getFirstRepaymentDate(): ?\DateTimeInterface
+    public function getFirstRepaymentDate(): ?\DateTime
     {
         return $this->firstRepaymentDate;
     }
 
-    public function setFirstRepaymentDate(?\DateTimeInterface $firstRepaymentDate): self
+    public function setFirstRepaymentDate(?\DateTime $firstRepaymentDate): self
     {
         $this->firstRepaymentDate = $firstRepaymentDate;
 
         return $this;
     }
 
-    public function getNextRepaymentDate(): ?\DateTimeInterface
+    public function getNextRepaymentDate(): ?\DateTime
     {
         return $this->nextRepaymentDate;
     }
 
-    public function setNextRepaymentDate(?\DateTimeInterface $nextRepaymentDate): self
+    public function setNextRepaymentDate(?\DateTime $nextRepaymentDate): self
     {
         $this->nextRepaymentDate = $nextRepaymentDate;
 
