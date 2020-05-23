@@ -9,6 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableMethodsTrait;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=LoanRepository::class)
@@ -21,6 +24,10 @@ class Loan implements TimestampableInterface
     const LOAN_STATUS_APPROVED = 2;
     const LOAN_STATUS_CANCELLED_BY_CUSTOMER = 3;
     const LOAN_STATUS_REJECTED = 4;
+
+    const REPAYMENT_WEEKLY = 1;
+    const REPAYMENT_FORTNIGHTLY = 2;
+    const REPAYMENT_MONTHLY = 3;
 
     /**
      * @ORM\Id()
@@ -103,16 +110,48 @@ class Loan implements TimestampableInterface
     /**
      * @ORM\Column(type="date", nullable=true)
      */
-    private $firstRepaymentPate;
+    private $firstRepaymentDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
      */
     private $nextRepaymentDate;
 
+    /**
+     * @ORM\Column(type="smallint")
+     */
+    private $repaymentFrequency;
+
     public function __construct()
     {
         $this->loanRepayments = new ArrayCollection();
+    }
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addConstraint(new Assert\Callback('validateRepaymentDateOnApprove'));
+    }
+
+    public function validateRepaymentDateOnApprove(ExecutionContextInterface $context, $payload)
+    {
+        if (!$this->isApproved()) {
+            return true;
+        }
+
+
+        if ($this->getFirstRepaymentDate() === null) {
+            $context->buildViolation('This field can not be empty when loan is approved')
+                ->atPath('firstRepaymentDate')
+                ->addViolation();
+        }
+
+        if ($this->getFirstRepaymentDate() !== null && $this->getNextRepaymentDate() !== null) {
+            if ($this->getFirstRepaymentDate() > $this->getNextRepaymentDate()) {
+                $context->buildViolation('Next repayment date must be greater than first repayment path')
+                    ->atPath('nextRepaymentDate')
+                    ->addViolation();
+            }
+        }
     }
 
     public function getId(): ?int
@@ -264,6 +303,11 @@ class Loan implements TimestampableInterface
         return $this;
     }
 
+    public function isApproved() : bool
+    {
+        return $this->status === self::LOAN_STATUS_APPROVED;
+    }
+
     public function getStatusLabel()
     {
         foreach (self::getStatuses() as $label => $key) {
@@ -326,14 +370,14 @@ class Loan implements TimestampableInterface
         return $this;
     }
 
-    public function getFirstRepaymentPate(): ?\DateTimeInterface
+    public function getFirstRepaymentDate(): ?\DateTimeInterface
     {
-        return $this->firstRepaymentPate;
+        return $this->firstRepaymentDate;
     }
 
-    public function setFirstRepaymentPate(?\DateTimeInterface $firstRepaymentPate): self
+    public function setFirstRepaymentDate(?\DateTimeInterface $firstRepaymentDate): self
     {
-        $this->firstRepaymentPate = $firstRepaymentPate;
+        $this->firstRepaymentDate = $firstRepaymentDate;
 
         return $this;
     }
@@ -343,10 +387,23 @@ class Loan implements TimestampableInterface
         return $this->nextRepaymentDate;
     }
 
-    public function setNextRepaymentDate(\DateTimeInterface $nextRepaymentDate): self
+    public function setNextRepaymentDate(?\DateTimeInterface $nextRepaymentDate): self
     {
         $this->nextRepaymentDate = $nextRepaymentDate;
 
         return $this;
     }
+
+    public function getRepaymentFrequency(): ?int
+    {
+        return $this->repaymentFrequency;
+    }
+
+    public function setRepaymentFrequency(int $repaymentFrequency): self
+    {
+        $this->repaymentFrequency = $repaymentFrequency;
+
+        return $this;
+    }
+
 }

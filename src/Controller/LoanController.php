@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Loan;
+use App\Factory\LoanFactory;
+use App\Form\AdminLoanType;
 use App\Form\LoanType;
 use App\Repository\LoanRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,7 +17,6 @@ use Symfony\Component\Security\Core\Security;
 class LoanController extends AbstractController
 {
     /**
-     * @Route("/", name="home_page", methods={"GET"})
      * @Route("/loan/", name="loan_index", methods={"GET"})
      */
     public function index(LoanRepository $loanRepository): Response
@@ -26,25 +27,33 @@ class LoanController extends AbstractController
     }
 
     /**
+     * Action to display loans of current user
+     *
+     * @Route("/", name="my_loan", methods={"GET"})
+     */
+    public function myLoans(LoanRepository $loanRepository): Response
+    {
+        $currentUser = $this->getUser();
+        return $this->render('loan/index.html.twig', [
+            'loans' => $loanRepository->findBy(['user' => $currentUser]),
+        ]);
+    }
+
+    /**
      * @Route("/loan/new", name="loan_new", methods={"GET","POST"})
      */
-    public function new(Request $request, Security $security): Response
+    public function new(Request $request, LoanFactory $loanFactory): Response
     {
-        $loan = new Loan();
+        $loan = $loanFactory->createDefaultLoan();
         $form = $this->createForm(LoanType::class, $loan);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //Set logged in user as owner of loan
-            $loan->setUser($security->getUser());
-            //New record should have status new
-            $loan->setStatus(Loan::LOAN_STATUS_NEW);
-
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($loan);
             $entityManager->flush();
 
-            return $this->redirectToRoute('loan_index');
+            return $this->redirectToRoute('my_loan');
         }
 
         return $this->render('loan/new.html.twig', [
@@ -66,12 +75,13 @@ class LoanController extends AbstractController
     /**
      * @Route("/loan/{id}/edit", name="loan_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Loan $loan): Response
+    public function edit(Request $request, Loan $loan, LoanFactory $loanFactory): Response
     {
-        $form = $this->createForm(LoanType::class, $loan, ['show_status_field' => true]);
+        $form = $this->createForm(AdminLoanType::class, $loan);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $loanFactory->handleApproveLoan($loan);
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('loan_index');

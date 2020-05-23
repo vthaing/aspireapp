@@ -51,6 +51,24 @@
                 <th>Loan Term</th>
                 <td>{{ loan.loanTerm }}</td>
             </tr>
+            <tr>
+                <th>Interest rate</th>
+                <td>{{ loan.interestRate}}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ loan.statusLabel}}</td>
+            </tr>
+            {% if (loan.isApproved) %}
+                <tr>
+                    <th>First repayment date</th>
+                    <td>{{ loan.firstRepaymentDate}}</td>
+                </tr>
+                <tr>
+                    <th>Next repayment date</th>
+                    <td>{{ loan.nextRepaymentDate}}</td>
+                </tr>
+            {% endif%}
         </tbody>
     </table>
 
