@@ -6,6 +6,7 @@ use App\Entity\Loan;
 use App\Factory\LoanFactory;
 use App\Form\AdminLoanType;
 use App\Form\LoanType;
+use App\Repository\LoanRepaymentRepository;
 use App\Repository\LoanRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +18,7 @@ use Symfony\Component\Security\Core\Security;
 class LoanController extends AbstractController
 {
     /**
-     * @Route("/loan/", name="loan_index", methods={"GET"})
+     * @Route("/admin/loan/", name="loan_index", methods={"GET"})
      */
     public function index(LoanRepository $loanRepository): Response
     {
@@ -65,15 +66,17 @@ class LoanController extends AbstractController
     /**
      * @Route("/loan/{id}", name="loan_show", methods={"GET"})
      */
-    public function show(Loan $loan): Response
+    public function show(Loan $loan, LoanRepaymentRepository $loanRepaymentRepository): Response
     {
+        $loanRepayments = $loanRepaymentRepository->findBy(['loan' => $loan->getId()], ['id' => 'desc']);
         return $this->render('loan/show.html.twig', [
             'loan' => $loan,
+            'loan_repayments' => $loanRepayments
         ]);
     }
 
     /**
-     * @Route("/loan/{id}/edit", name="loan_edit", methods={"GET","POST"})
+     * @Route("/admin/loan/{id}/edit", name="loan_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Loan $loan, LoanFactory $loanFactory): Response
     {
@@ -94,7 +97,7 @@ class LoanController extends AbstractController
     }
 
     /**
-     * @Route("/loan/{id}", name="loan_delete", methods={"DELETE"})
+     * @Route("/admin/loan/{id}", name="loan_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Loan $loan): Response
     {

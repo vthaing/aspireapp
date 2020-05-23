@@ -3,11 +3,37 @@
 {% block title %}Loan Detail{% endblock %}
 
 {% block body %}
+    <h1>Loan Repayment History</h1>
+     {% if (loan.isApproved) %}
+        <div class="btn-block pull-right">
+            {{ include('loan/_repay_form.html.twig') }}
+        </div>
+    {% endif %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th style="text-align: right">Amount</th>
+            <th>Status</th>
+            <th>Pay For Repayment Date</th>
+            <th>Pay at</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for loan_repayment in loan_repayments %}
+            <tr>
+                <td style="text-align: right">{{ loan_repayment.amount | number_format(2) }}</td>
+                <td>{{ loan_repayment.status }}</td>
+                <td>{{ loan_repayment.payForRepaymentDate ? loan_repayment.payForRepaymentDate|date('Y-m-d') : '' }}</td>
+                <td>{{ loan_repayment.createdAt ? loan_repayment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
     <h1>Loan Detail</h1>
-
-    <div class="btn-block pull-right">
-        {{ include('loan/_repay_form.html.twig') }}
-    </div>
 
     <table class="table">
         <tbody>
@@ -75,5 +101,4 @@
             {% endif%}
         </tbody>
     </table>
-    <a href="{{ path('loan_index') }}">Back to list</a>
 {% endblock %}

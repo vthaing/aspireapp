@@ -8,29 +8,28 @@ use App\Factory\LoanRepaymentFactory;
 use App\Form\LoanRepaymentType;
 use App\Repository\LoanRepaymentRepository;
 use App\Repository\LoanRepository;
+use http\Exception\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/loan/repayment")
- */
+
 class LoanRepaymentController extends AbstractController
 {
     /**
-     * @Route("/{loanId}", name="loan_repayment_index", methods={"GET"})
+     * @Route("/admin/loan/repayment", name="loan_repayment_index", methods={"GET"})
      */
-    public function index(LoanRepaymentRepository $loanRepaymentRepository, $loanId): Response
+    public function index(LoanRepaymentRepository $loanRepaymentRepository): Response
     {
         return $this->render('loan_repayment/index.html.twig', [
-            'loan_repayments' => $loanRepaymentRepository->findBy(['loan' => $loanId]),
+            'loan_repayments' => $loanRepaymentRepository->findBy([], ['id' => 'desc']),
         ]);
     }
 
     /**
-     * @Route("/new", name="loan_repayment_new", methods={"GET","POST"})
+     * @Route("/loan/repayment/new", name="loan_repayment_new", methods={"GET","POST"})
      */
     public function new(
         Request $request, LoanRepository $loanRepository,
@@ -48,6 +47,10 @@ class LoanRepaymentController extends AbstractController
             throw new NotFoundHttpException("Invalid Loan");
         }
 
+        if ($loan->isApproved() === false) {
+            throw new InvalidArgumentException("Can not Repay for unapproved loan");
+        }
+
         $repayment = $repaymentFactory->createFromLoan($loan);
         //Change next repayment date after paying
         $loanFactory->changeNextRepaymentDate($loan);
@@ -56,13 +59,13 @@ class LoanRepaymentController extends AbstractController
         $entityManager->persist($repayment);
         $entityManager->flush();
 
-        return $this->redirectToRoute('loan_repayment_index', ['loanId' => $loanId]);
+        return $this->redirectToRoute('loan_show', ['loanId' => $loanId]);
     }
 
 
 
     /**
-     * @Route("/{id}", name="loan_repayment_delete", methods={"DELETE"})
+     * @Route("/admin/loan/repayment/{id}", name="loan_repayment_delete", methods={"DELETE"})
      */
     public function delete(Request $request, LoanRepayment $loanRepayment): Response
     {
