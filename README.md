@@ -66,7 +66,10 @@ services:
                 1: '@app.service.repayment.weekly'
                 3: '@app.service.repayment.mothly'
 ```
-
+## Interest rate
+Currently, system is supporting interest rate per month
+We can add more interest rate such as: interest rate per year, flat interest rate, interest rate reduce base loan amount left.
+Just modify `InterestRateService` and do like the idea of `Payment frequency`
 # System explanation
 We have 2 types of user. They are normal and admin users.
 ## Normal user
