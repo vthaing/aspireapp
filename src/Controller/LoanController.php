@@ -103,18 +103,4 @@ class LoanController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
-    /**
-     * @Route("/admin/loan/{id}", name="loan_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, Loan $loan): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$loan->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($loan);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('loan_index');
-    }
 }

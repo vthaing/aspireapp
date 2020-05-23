@@ -122,4 +122,22 @@ class LoanRepayment implements TimestampableInterface
     {
         return $this->status === self::STATUS_SUCCESS;
     }
+
+    public function getStatusLabel()
+    {
+        switch ($this->status)
+        {
+            case self::STATUS_SUCCESS:
+                return "Success";
+                break;
+            case self::STATUS_NEW:
+                return "New";
+                break;
+            case self::STATUS_FAILED:
+                return "Failed";
+                break;
+        }
+
+        return "Unknown";
+    }
 }

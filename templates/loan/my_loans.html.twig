@@ -3,8 +3,8 @@
 {% block title %}My Loans{% endblock %}
 
 {% block body %}
-    <h1>Loan index</h1>
-    <a href="{{ path('loan_new') }}">Register new loan application</a>
+    <h1>My Loans</h1>
+    <a class="btn btn-primary" href="{{ path('loan_new') }}">Register new loan application</a>
     <table class="table">
         <thead>
         <tr>
@@ -14,7 +14,7 @@
             <th>Loan Term</th>
             <th>Status</th>
             <th>Next repayment</th>
-            <th>actions</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -27,7 +27,7 @@
                 <td style="font-weight: bold">{{ loan.statusLabel }}</td>
                 <td>{{ loan.nextRepaymentDate ? loan.nextRepaymentDate|date('Y-m-d') }}</td>
                 <td>
-                    <a href="{{ path('loan_show', {'id': loan.id}) }}">Show</a>
+                    <a class="btn btn-primary" href="{{ path('loan_show', {'id': loan.id}) }}">Show</a>
                 </td>
             </tr>
         {% else %}

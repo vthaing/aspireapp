@@ -23,19 +23,19 @@
             </tr>
             <tr>
                 <td>Loan Amount</td>
-                <td style="text-align: right">{{ repaid_summary.loanAmount | number_format(2) }}</td>
+                <td style="text-align: right">{{ repaid_summary.loanAmount | number_format(2) }} USD</td>
             </tr>
             <tr>
                 <td>Total Loan Repayments</td>
-                <td style="text-align: right">{{ repaid_summary.totalLoanRepayments | number_format(2) }}</td>
+                <td style="text-align: right">{{ repaid_summary.totalLoanRepayments | number_format(2) }} USD</td>
             </tr>
             <tr>
                 <td>Total Interest Paid</td>
-                <td style="text-align: right">{{ repaid_summary.totalInterestPaid | number_format(2) }}</td>
+                <td style="text-align: right">{{ repaid_summary.totalInterestPaid | number_format(2) }} USD</td>
             </tr>
             <tr>
                 <td>Total Repaid Success</td>
-                <td style="text-align: right">{{ repaid_summary.paidSucces | number_format(2) }}</td>
+                <td style="text-align: right">{{ repaid_summary.paidSucces | number_format(2) }} USD</td>
             </tr>
         </tbody>
     </table>
@@ -44,7 +44,7 @@
     <table class="table">
         <thead>
         <tr>
-            <th style="text-align: right">Amount</th>
+            <th>Amount</th>
             <th>Status</th>
             <th>Pay For Repayment Date</th>
             <th>Pay at</th>
@@ -53,8 +53,8 @@
         <tbody>
         {% for loan_repayment in loan_repayments %}
             <tr>
-                <td style="text-align: right">{{ loan_repayment.amount | number_format(2) }}</td>
-                <td>{{ loan_repayment.status }}</td>
+                <td style="text-align: right">{{ loan_repayment.amount | number_format(2) }} USD</td>
+                <td>{{ loan_repayment.statusLabel }}</td>
                 <td>{{ loan_repayment.payForRepaymentDate ? loan_repayment.payForRepaymentDate|date('Y-m-d') : '' }}</td>
                 <td>{{ loan_repayment.createdAt ? loan_repayment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>

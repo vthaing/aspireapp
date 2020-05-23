@@ -59,19 +59,19 @@ class LoanRepaymentController extends AbstractController
         $entityManager->persist($repayment);
         $entityManager->flush();
 
-        return $this->redirectToRoute('loan_show', ['loanId' => $loanId]);
+        return $this->redirectToRoute('loan_show', ['id' => $loanId]);
     }
 
 
 
     /**
-     * @Route("/admin/loan/repayment/{id}", name="loan_repayment_delete", methods={"DELETE"})
+     * @Route("/admin/loan/repayment/{id}", name="loan_repayment_approve", methods={"POST"})
      */
-    public function delete(Request $request, LoanRepayment $loanRepayment): Response
+    public function approve(Request $request, LoanRepayment $loanRepayment): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$loanRepayment->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('approve'.$loanRepayment->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($loanRepayment);
+            $loanRepayment->setStatus(LoanRepayment::STATUS_SUCCESS);
             $entityManager->flush();
         }
 
