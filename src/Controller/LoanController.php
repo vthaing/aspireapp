@@ -32,8 +32,12 @@ class LoanController extends AbstractController
      *
      * @Route("/", name="my_loan", methods={"GET"})
      */
-    public function myLoans(LoanRepository $loanRepository): Response
+    public function myLoans(LoanRepository $loanRepository, Security $security): Response
     {
+        if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            return $this->redirectToRoute('loan_index');
+        }
+
         $currentUser = $this->getUser();
         return $this->render('loan/my_loans.html.twig', [
             'loans' => $loanRepository->findBy(['user' => $currentUser]),
