@@ -10,6 +10,7 @@ namespace App\Service\Repayment;
 
 
 use App\Entity\Loan;
+use App\Model\LoanRepaidSummary;
 
 class RepaymentService
 {
@@ -20,7 +21,7 @@ class RepaymentService
         $this->repaymentStrategies = $repaymentStrategies;
     }
 
-    protected function getStrategy(Loan $loan) : RepaymentStrategyInterface
+    protected function getStrategy(Loan $loan) : RepaymentStrategy
     {
         foreach ($this->repaymentStrategies as $frequencyId => $strategy) {
             if ($frequencyId === $loan->getRepaymentFrequency()) {
@@ -39,7 +40,6 @@ class RepaymentService
     public function calculateAmount(Loan $loan)
     {
         $repaymentStrategy = $this->getStrategy($loan);
-
         return $repaymentStrategy->calculateAmount($loan);
     }
 
@@ -50,7 +50,22 @@ class RepaymentService
     public function getNextRepaymentDate(Loan $loan)
     {
         $repaymentStrategy = $this->getStrategy($loan);
-
         return $repaymentStrategy->getNextRepaymentDate($loan);
+    }
+
+    public function getPaidSuccess(Loan $loan) : float
+    {
+        $repaymentStrategy = $this->getStrategy($loan);
+        return $repaymentStrategy->getPaidSuccess($loan);
+    }
+
+    /**
+     * @param Loan $loan
+     * @return LoanRepaidSummary
+     */
+    public function getLoanRepaidSummary(Loan $loan): LoanRepaidSummary
+    {
+        $repaymentStrategy = $this->getStrategy($loan);
+        return $repaymentStrategy->getLoanRepaidSummary($loan);
     }
 }

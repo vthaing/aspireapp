@@ -10,20 +10,9 @@ namespace App\Service\Repayment;
 
 
 use App\Entity\Loan;
-use App\Service\InterestRate\InterestRateService;
 
-class WeeklyRepayment implements RepaymentStrategyInterface
+class WeeklyRepayment extends RepaymentStrategy
 {
-
-    /**
-     * @var InterestRateService
-     */
-    private $interestRateService;
-
-    public function __construct(InterestRateService $interestRateService)
-    {
-        $this->interestRateService = $interestRateService;
-    }
 
     public function countNumberOfWeeks(Loan $loan) : int
     {
@@ -83,5 +72,8 @@ class WeeklyRepayment implements RepaymentStrategyInterface
         $currentRepaymentDate = clone $loan->getNextRepaymentDate();
         return $currentRepaymentDate->modify("+7 days");
     }
+
+
+
 
 }

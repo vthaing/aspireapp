@@ -8,6 +8,7 @@ use App\Form\AdminLoanType;
 use App\Form\LoanType;
 use App\Repository\LoanRepaymentRepository;
 use App\Repository\LoanRepository;
+use App\Service\Repayment\RepaymentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -70,12 +71,15 @@ class LoanController extends AbstractController
     /**
      * @Route("/loan/{id}", name="loan_show", methods={"GET"})
      */
-    public function show(Loan $loan, LoanRepaymentRepository $loanRepaymentRepository): Response
+    public function show(Loan $loan, LoanRepaymentRepository $loanRepaymentRepository, RepaymentService $repaymentService): Response
     {
         $loanRepayments = $loanRepaymentRepository->findBy(['loan' => $loan->getId()], ['id' => 'desc']);
+        $repaidSummary = $repaymentService->getLoanRepaidSummary($loan);
+
         return $this->render('loan/show.html.twig', [
             'loan' => $loan,
-            'loan_repayments' => $loanRepayments
+            'loan_repayments' => $loanRepayments,
+            'repaid_summary' => $repaidSummary
         ]);
     }
 

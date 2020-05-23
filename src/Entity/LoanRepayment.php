@@ -117,4 +117,9 @@ class LoanRepayment implements TimestampableInterface
 
         return $this;
     }
+
+    public function isSuccess() : bool
+    {
+        return $this->status === self::STATUS_SUCCESS;
+    }
 }

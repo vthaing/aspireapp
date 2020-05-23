@@ -3,12 +3,43 @@
 {% block title %}Loan Detail{% endblock %}
 
 {% block body %}
-    <h1>Loan Repayment History</h1>
-     {% if (loan.isApproved) %}
+    {% if (loan.isApproved) %}
+    <h1>Summary</h1>
+
         <div class="btn-block pull-right">
             {{ include('loan/_repay_form.html.twig') }}
         </div>
+
+    <table style="width: 400px; border: #222222" class="table">
+        <tbody>
+            <tr>
+                <td>Loan Term (months)</td>
+                <td style="text-align: right">{{ repaid_summary.loanTerm | number_format() }}</td>
+            </tr>
+            <tr>
+                <td>Interest Rate (per month)</td>
+                <td style="text-align: right">{{ repaid_summary.interestRate | number_format(2) }}%</td>
+            </tr>
+            <tr>
+                <td>Loan Amount</td>
+                <td style="text-align: right">{{ repaid_summary.loanAmount | number_format(2) }}</td>
+            </tr>
+            <tr>
+                <td>Total Loan Repayments</td>
+                <td style="text-align: right">{{ repaid_summary.totalLoanRepayments | number_format(2) }}</td>
+            </tr>
+            <tr>
+                <td>Total Interest Paid</td>
+                <td style="text-align: right">{{ repaid_summary.totalInterestPaid | number_format(2) }}</td>
+            </tr>
+            <tr>
+                <td>Total Repaid Success</td>
+                <td style="text-align: right">{{ repaid_summary.paidSucces | number_format(2) }}</td>
+            </tr>
+        </tbody>
+    </table>
     {% endif %}
+    <h1>Loan Repayment History</h1>
     <table class="table">
         <thead>
         <tr>
